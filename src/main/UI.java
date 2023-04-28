@@ -61,7 +61,6 @@ public class UI extends JFrame implements ActionListener {
         textField.addActionListener(this);
         textArea = new JTextArea(5, 30);
         textArea.setEditable(false);
-     
 
     }
 
@@ -263,27 +262,27 @@ public class UI extends JFrame implements ActionListener {
             g2.drawImage(heart_live, x, y, null);
         } else if (gp.player.Life == gp.player.Death) {
             g2.drawImage(heart_ghost, x, y, null);
-        } 
-     //   createChatbox();
-      //  drawChatbox();
+        }
+        // createChatbox();
+        // drawChatbox();
 
     }
 
-   // public void createChatbox() {
-    //    JPanel chatPanel = new JPanel();
-    //    chatPanel.setLayout(new BorderLayout());
-    //    chatPanel.add(textField, BorderLayout.PAGE_END);
-    //    chatPanel.add(scrollPane, BorderLayout.CENTER);
+    // public void createChatbox() {
+    // JPanel chatPanel = new JPanel();
+    // chatPanel.setLayout(new BorderLayout());
+    // chatPanel.add(textField, BorderLayout.PAGE_END);
+    // chatPanel.add(scrollPane, BorderLayout.CENTER);
 
- //   }
+    // }
 
-    //private void drawChatbox() {
-      //  if (!scrollPane.isVisible()) {
-      //      scrollPane.setVisible(true);
-      //      textField.setVisible(true);
-      //  }
+    // private void drawChatbox() {
+    // if (!scrollPane.isVisible()) {
+    // scrollPane.setVisible(true);
+    // textField.setVisible(true);
+    // }
 
- //   }
+    // }
 
     // title screens
     public void drawTitleScreen() {
@@ -479,11 +478,11 @@ public class UI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
-      //  String text = textField.getText();
-       // textArea.append(text + "\n");
-       // textField.selectAll();
+        // String text = textField.getText();
+        // textArea.append(text + "\n");
+        // textField.selectAll();
 
-        //textArea.setCaretPosition(textArea.getDocument().getLength());
+        // textArea.setCaretPosition(textArea.getDocument().getLength());
     }
 
 }
