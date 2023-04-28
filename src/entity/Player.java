@@ -18,7 +18,8 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
-    // public int hasKey = 0;
+    public int hasTowel = 0;
+    public int hasKey = 0;
     public String color;
 
     public Player(GamePanel gp, KeyHandler keyH) {
@@ -104,7 +105,43 @@ public class Player extends Entity {
 
     public void pickUpObject(int i) {
         if (i != 999) {
+            String objectName = gp.obj[i].name;
+            switch (objectName) {
+                case "Key":
+                    // gp.playSE(1); if more sounds created
+                    hasKey++;
+                    gp.obj[i] = null;
+                    gp.ui.showMessage("You've got the key");
+                    break;
+                case "Temp":
+                    if (hasKey > 0) {
+                        gp.obj[i] = null;
+                        hasKey--;
+                        System.out.println("Key: " + hasKey);
+                    }
+                    break;
+                case "Boots":
+                    speed += 2;
+                    gp.obj[i] = null;
 
+                    break;
+                case "Chest":
+                    // gp.ui.gameFinished = true;
+                    gp.stopMusic();
+
+                    break;
+                case "Towel":
+                    gp.obj[i] = null;
+                    hasTowel++;
+                    break;
+                case "Door":
+                    if (hasKey > 0) {
+                        gp.obj[i] = null;
+                        hasKey--;
+                        System.out.println("Key: " + hasKey);
+                    }
+                    break;
+            }
         }
     }
 
@@ -142,24 +179,24 @@ public class Player extends Entity {
 
     public void getPlayerImage() {
 
-        int number = 0 ;
+        int number = 0;
 
-        if(this.color != null){
-            switch(this.color){
+        if (this.color != null) {
+            switch (this.color) {
                 case "Purple":
-                number = 1 ;
-                break;
+                    number = 1;
+                    break;
                 case "Yellow":
-                number = 2; 
-                break;
+                    number = 2;
+                    break;
                 case "Green":
-                number = 3;
-                break;
+                    number = 3;
+                    break;
                 case "Red":
-                number = 0; 
-                break;
+                    number = 0;
+                    break;
             }
-        }else{
+        } else {
             number = gp.characterIndex;
         }
 
@@ -169,7 +206,7 @@ public class Player extends Entity {
             right = setup("Redright.png");
             joined = "Red";
         }
-        if (number== 1) {
+        if (number == 1) {
             // purple
             left = setup("Purpleleft.png");
             right = setup("Purpleright.png");
@@ -181,7 +218,7 @@ public class Player extends Entity {
             right = setup("Yellowright.png");
             joined = "Yellow";
         }
-        if (number== 3) {
+        if (number == 3) {
             // green
             left = setup("Greenleft.png");
             right = setup("Greenright.png");
@@ -189,11 +226,13 @@ public class Player extends Entity {
         }
 
     }
+
     /**
-     * Color getter for each index 
-     * @return the color 
+     * Color getter for each index
+     * 
+     * @return the color
      */
-    public String getColor(){
+    public String getColor() {
         return this.color;
     }
 }
