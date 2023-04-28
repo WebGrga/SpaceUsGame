@@ -3,6 +3,8 @@ package main;
 import entity.impostor;
 import object.OBJ_Boots;
 import object.OBJ_Door;
+import object.OBJ_Eye;
+import object.OBJ_key;
 import object.OBJ_temp;
 
 public class AssetSetter {
@@ -36,6 +38,14 @@ public class AssetSetter {
         gp.obj[5] = new OBJ_Door(gp);
         gp.obj[5].worldX = gp.tileSize * 10;
         gp.obj[5].worldY = gp.tileSize * 11;
+
+        gp.obj[6] = new OBJ_Eye(gp);
+        gp.obj[6].worldX = gp.tileSize * 10;
+        gp.obj[6].worldY = gp.tileSize * 8;
+
+        gp.obj[7] = new OBJ_key(gp);
+        gp.obj[7].worldX = gp.tileSize * 12;
+        gp.obj[7].worldY = gp.tileSize * 8;
 
     }
 

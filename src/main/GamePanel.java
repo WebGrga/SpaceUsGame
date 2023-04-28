@@ -58,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
     public EventHandler eHandler = new EventHandler(this);
     public boolean fullScreenOn = false;
     Config config = new Config(this);
-    EnvironmentManager eManager = new EnvironmentManager(this);
+    public EnvironmentManager eManager = new EnvironmentManager(this);
     public int characterIndex = 0;
     public int gameState = 0;
     public final int titleState = 0;

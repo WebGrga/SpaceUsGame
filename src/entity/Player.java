@@ -141,6 +141,11 @@ public class Player extends Entity {
                         System.out.println("Key: " + hasKey);
                     }
                     break;
+                case "Eye":
+                    gp.obj[i] = null;
+                    gp.eManager.setVisionSize(600);
+                    gp.eManager.setup();
+                    break;
             }
         }
     }
