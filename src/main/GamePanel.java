@@ -50,7 +50,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
-    public Entity obj[] = new Entity[10];
+    public Entity obj[] = new Entity[50];
     public Entity npc[] = new Entity[10];
     ArrayList<Entity> entityList = new ArrayList<>();
     public AssetSetter aSetter = new AssetSetter(this);

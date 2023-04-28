@@ -4,6 +4,7 @@ import entity.impostor;
 import object.OBJ_Boots;
 import object.OBJ_Door;
 import object.OBJ_Eye;
+import object.OBJ_Towel;
 import object.OBJ_key;
 import object.OBJ_temp;
 
@@ -46,6 +47,18 @@ public class AssetSetter {
         gp.obj[7] = new OBJ_key(gp);
         gp.obj[7].worldX = gp.tileSize * 12;
         gp.obj[7].worldY = gp.tileSize * 8;
+
+        gp.obj[8] = new OBJ_Towel(gp);
+        gp.obj[8].worldX = gp.tileSize * 8;
+        gp.obj[8].worldY = gp.tileSize * 36;
+
+        gp.obj[9] = new OBJ_Towel(gp);
+        gp.obj[9].worldX = gp.tileSize * 12;
+        gp.obj[9].worldY = gp.tileSize * 36;
+
+        gp.obj[10] = new OBJ_Towel(gp);
+        gp.obj[10].worldX = gp.tileSize * 15;
+        gp.obj[10].worldY = gp.tileSize * 36;
 
     }
 
