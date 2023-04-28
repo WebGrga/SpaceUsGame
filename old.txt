@@ -1,0 +1,85 @@
+public void draw(Graphics2D g2) {
+        if (gameFinished == true) {
+            g2.setFont(arial);
+            g2.setColor(Color.white);
+            String text;
+            int textLength;
+            int x;
+            int y;
+            text = "You found the treasure!";
+            textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+            x = gp.screenWidth / 2 - textLength / 2;
+            y = gp.screenHeight / 2 - (gp.tileSize * 3);
+            g2.drawString(text, x, y);
+            gp.gameThread = null;
+        } else {
+            g2.setFont(arial);
+            g2.setColor(Color.white);
+            // g2.drawImage(keyImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize,
+            // gp.tileSize, null);
+            // g2.drawString("x" + gp.player.hasKey, 70, 70);
+
+            // time
+            playTime += (double) 1 / 60;
+            // g2.drawString("Time:" + dFormat.format(playTime), gp.tileSize * 11, 65);
+            if (messageOn == true) {
+                g2.setFont(g2.getFont().deriveFont(60));
+                g2.drawString(message, gp.tileSize / 2, gp.tileSize * 5);
+                messageCounter++;
+                if (messageCounter > 120) {
+                    messageCounter = 0;
+                    messageOn = false;
+                }
+            }
+        }
+
+    }
+
+
+PICKUP
+String objectName = gp.obj[i].name;
+            switch (objectName) {
+                case "Key":
+                    // gp.playSE(1); if more sounds created
+                    hasKey++;
+                    gp.obj[i] = null;
+                    gp.ui.showMessage("You've got the key");
+                    break;
+                case "Temp":
+                    if (hasKey > 0) {
+                        gp.obj[i] = null;
+                        hasKey--;
+                        System.out.println("Key: " + hasKey);
+                    }
+                    break;
+                case "Boots":
+                    speed += 2;
+                    gp.obj[i] = null;
+
+                    break;
+                case "Chest":
+                    gp.ui.gameFinished = true;
+                    gp.stopMusic();
+
+                    break;
+            }
+
+
+
+public void setObject() {
+        gp.obj[0] = new OBJ_key(gp);
+        gp.obj[0].worldX = 5 * gp.tileSize;
+        gp.obj[0].worldY = 8 * gp.tileSize;
+
+        gp.obj[1] = new OBJ_temp(gp);
+        gp.obj[1].worldX = 15 * gp.tileSize;
+        gp.obj[1].worldY = 8 * gp.tileSize;
+
+        gp.obj[2] = new OBJ_Boots(gp);
+        gp.obj[2].worldX = 3 * gp.tileSize;
+        gp.obj[2].worldY = 3 * gp.tileSize;
+
+        gp.obj[3] = new OBJ_Chest(gp);
+        gp.obj[3].worldX = 15 * gp.tileSize;
+        gp.obj[3].worldY = 6 * gp.tileSize;
+    }
