@@ -8,25 +8,18 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.StreamCorruptedException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.UUID;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import entity.Entity;
 import entity.Player;
-import entity.NewPlayer;
-import entity.PlayerServer;
 import environment.EnvironmentManager;
 import tile.TileManager;
 
@@ -57,7 +50,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
-    public Entity obj[] = new Entity[10];
+    public Entity obj[] = new Entity[50];
     public Entity npc[] = new Entity[10];
     ArrayList<Entity> entityList = new ArrayList<>();
     public AssetSetter aSetter = new AssetSetter(this);
@@ -65,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
     public EventHandler eHandler = new EventHandler(this);
     public boolean fullScreenOn = false;
     Config config = new Config(this);
-    EnvironmentManager eManager = new EnvironmentManager(this);
+    public EnvironmentManager eManager = new EnvironmentManager(this);
     public int characterIndex = 0;
     public int gameState = 0;
     public final int titleState = 0;
@@ -74,7 +67,6 @@ public class GamePanel extends JPanel implements Runnable {
     public final int dialogueState = 3;
     public final int optionsState = 4;
     public final int gameOverState = 5;
-    public UUID uuid = UUID.randomUUID();
 
     public int playerNum = 0;
     int playerX = 100;
@@ -85,10 +77,6 @@ public class GamePanel extends JPanel implements Runnable {
     ObjectInputStream ois;
     ObjectInputStream inputStream;
     Object message;
-    public ChatPanel chatPanel = new ChatPanel();
-    HashMap<UUID, PlayerServer> players = new HashMap<>();
-
-    HashMap<UUID, NewPlayer> playersDraws = new HashMap<>();
     // Server server = new Server();
     // ArrayList<Socket> clientss = server.clients;
 
@@ -102,27 +90,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
-        this.uuid = UUID.randomUUID();
-        setLayout(new BorderLayout());// chat
-        player.setUuid(this.uuid);
         new Thread(() -> connectToServer()).start();
 
-        setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        JPanel gameWindow = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                GamePanel.this.paintComponent(g);
-            }
-
-        };
-
-        gameWindow.setPreferredSize(new Dimension((int) (screenWidth * 0.8), screenWidth));
-        gameWindow.setBackground(Color.WHITE);
-        gameWindow.setDoubleBuffered(true);
-        gameWindow.addKeyListener(keyH);
-        gameWindow.setFocusable(true);
-        add(gameWindow);
     }
 
     public void connectToServer() {
@@ -153,7 +122,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setupGame() {
-
         aSetter.setObject();
         aSetter.setNPC();
         eManager.setup();
@@ -200,110 +168,38 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public class ChatPanel extends JPanel {
-
-        private JTextArea messageArea;
-        private JTextField inputField;
-
-        public ChatPanel() {
-            setLayout(new BorderLayout());
-            messageArea = new JTextArea();
-            messageArea.setEditable(false);
-
-            JScrollPane scrollPane = new JScrollPane(messageArea);
-            inputField = new JTextField();
-
-            inputField.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                    sendMessage(inputField.getText());
-                    inputField.setText("");
-                }
-
-            });
-
-            add(scrollPane, BorderLayout.CENTER);
-            add(inputField, BorderLayout.SOUTH);
-            setPreferredSize(new Dimension(200, screenHeight));
-
-        }
-
-        public void sendMessage(String message) {
-            messageArea.append("Me: " + message + "\n");
-
-        }
-
-        public void receiveMessage(String message) {
-            messageArea.append(message + "\n");
-
-        }
-    }
-
     public void update() {
 
         if (gameState == playState) {
             player.update();
 
-            Send sendObject = new Send(this.uuid, player.joined, player.worldX, player.worldY, player.direction,
-                    player.getGameId()); // create the Send object to send
+            Send sendObject = new Send(player.joined, player.worldX, player.worldY); // create the Send object to send
             sendObjectToAllClients(sendObject);
 
-            Send mes = recieve();
+            recieve();
 
-            if (mes != null) {
+            if (message != null) {
 
                 // TODO
 
-                System.out.println(mes);
-                for (HashMap.Entry<UUID, PlayerServer> entry : (mes).getPlayers().entrySet()) {
-                    // PlayerServer player = entry.getValue();
+                // System.out.println(message);
+                Send recieved = (Send) message;
+                String colornpc = recieved.getPlayerColor();
+                int wX = recieved.getWorldXplayer();
+                int wY = recieved.getWorldYplayer();
+                if (colornpc.equals("Purple")) {
+                    npc[0].setLook("Purple");
+                    npc[0].setWorldX(wX);
+                    npc[0].setWorldY(wY);
+                } else if (colornpc.equals("Yellow")) {
+                    npc[0].setLook("Yellow");
+                    npc[0].setWorldX(wX);
+                    npc[0].setWorldY(wY);
+                } else if (colornpc.equals("Green")) {
+                    npc[0].setLook("Green");
+                    npc[0].setWorldX(wX);
+                    npc[0].setWorldY(wY);
                 }
-                players = (mes).getPlayersExceptMyself(uuid);
-                for (HashMap.Entry<UUID, PlayerServer> entry : players.entrySet()) {
-                    PlayerServer anotherPlayer = entry.getValue();
-
-                    if (playersDraws.get(anotherPlayer.getUuid()) == null) {
-                        NewPlayer newPlayer = new NewPlayer(this);
-                        newPlayer.setUuid(anotherPlayer.getUuid());
-                        newPlayer.worldX = anotherPlayer.getScreenX();
-                        newPlayer.worldY = anotherPlayer.getScreenY();
-                        newPlayer.color = anotherPlayer.getColor();
-                        newPlayer.characterIndex = 1;
-                        newPlayer.direction = anotherPlayer.getDirection();
-                        newPlayer.joined = anotherPlayer.getColor();
-                        playersDraws.put(newPlayer.getUuid(), newPlayer);
-
-                    }
-                    {
-                        NewPlayer newPlayer = playersDraws.get(anotherPlayer.getUuid());
-                        newPlayer.worldX = anotherPlayer.getScreenX();
-                        newPlayer.worldY = anotherPlayer.getScreenY();
-                        newPlayer.direction = anotherPlayer.getColor();
-                        // newPlayer.color = anotherPlayer.getColor();
-                        playersDraws.remove(newPlayer.getUuid());
-                        playersDraws.put(newPlayer.getUuid(), newPlayer);
-
-                    }
-                }
-
-                // Send recieved = (Send) message;
-                // String colornpc = recieved.getPlayerColor();
-                // int wX = recieved.getWorldXplayer();
-                // int wY = recieved.getWorldYplayer();
-                //// if (colornpc.equals("Purple")) {
-                // npc[0].setLook("Purple");
-                // npc[0].setWorldX(wX);
-                // npc[0].setWorldY(wY);
-                // } else if (colornpc.equals("Yellow")) {
-                // npc[0].setLook("Yellow");
-                // npc[0].setWorldX(wX);
-                // npc[0].setWorldY(wY);
-                // } else if (colornpc.equals("Green")) {
-                // npc[0].setLook("Green");
-                //// npc[0].setWorldX(wX);
-                // npc[0].setWorldY(wY);
-                /// }
 
                 // if the player doesnt exist, create object and move to position.
                 // if the player exist, move it
@@ -339,15 +235,13 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public Send recieve() {
+    public void recieve() {
 
         try {
 
-            return (Send) ois.readObject();
+            message = ois.readObject();
             // System.out.println("Received message from server: " + message);
 
-        } catch (StreamCorruptedException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -355,13 +249,6 @@ public class GamePanel extends JPanel implements Runnable {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        try {
-            ois.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
 
     }
 
@@ -371,23 +258,10 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         if (gameState == titleState) {
-
-            if (chatPanel.getParent() != null) {
-                add(chatPanel);
-                revalidate();
-            }
             ui.draw(g2);
-        } else if (gameState == playState) {
-            if (chatPanel.getParent() == null) {
-                add(chatPanel);
-                revalidate();
-            }
-            for (HashMap.Entry<UUID, NewPlayer> entry : playersDraws.entrySet()) {
-                NewPlayer playerA = entry.getValue();
-                entityList.add(playerA);
-                System.out.println(entry.toString() + "\n");
-            }
-
+        } else {
+            tileM.draw(g2);
+            entityList.add(player);
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) {
                     entityList.add(npc[i]);
@@ -398,9 +272,6 @@ public class GamePanel extends JPanel implements Runnable {
                     entityList.add(obj[i]);
                 }
             }
-
-            tileM.draw(g2);
-            entityList.add(player);
 
             Collections.sort(entityList, new Comparator<Entity>() {
                 @Override
@@ -413,9 +284,9 @@ public class GamePanel extends JPanel implements Runnable {
             for (int i = 0; i < entityList.size(); i++) {
                 entityList.get(i).draw(g2);
             }
-            // for (int i = 0; i < entityList.size(); i++) {
-            // entityList.remove(i);
-            // }
+            for (int i = 0; i < entityList.size(); i++) {
+                entityList.remove(i);
+            }
 
             eManager.draw(g2);
             ui.draw(g2);

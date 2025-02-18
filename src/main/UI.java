@@ -21,15 +21,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JButton;
 
 import entity.Entity;
 import object.OBJ_Heart;
 import object.OBJ_key;
 
 public class UI extends JFrame implements ActionListener {
-
-    JScrollPane scrollPane;
     GamePanel gp;
     Graphics2D g2;
     Font arial;
@@ -57,10 +54,6 @@ public class UI extends JFrame implements ActionListener {
         Entity heart = new OBJ_Heart(gp);
         heart_live = heart.image;
         heart_ghost = heart.image2;
-        textField = new JTextField(30);
-        textField.addActionListener(this);
-        textArea = new JTextArea(5, 30);
-        textArea.setEditable(false);
 
     }
 
@@ -78,7 +71,6 @@ public class UI extends JFrame implements ActionListener {
         }
         if (gp.gameState == gp.playState) {
             drawPlayerLife();
-
         }
         if (gp.gameState == gp.pauseState) {
             // PAUSE STATE
@@ -263,26 +255,7 @@ public class UI extends JFrame implements ActionListener {
         } else if (gp.player.Life == gp.player.Death) {
             g2.drawImage(heart_ghost, x, y, null);
         }
-        // createChatbox();
-        // drawChatbox();
-
     }
-
-    // public void createChatbox() {
-    // JPanel chatPanel = new JPanel();
-    // chatPanel.setLayout(new BorderLayout());
-    // chatPanel.add(textField, BorderLayout.PAGE_END);
-    // chatPanel.add(scrollPane, BorderLayout.CENTER);
-
-    // }
-
-    // private void drawChatbox() {
-    // if (!scrollPane.isVisible()) {
-    // scrollPane.setVisible(true);
-    // textField.setVisible(true);
-    // }
-
-    // }
 
     // title screens
     public void drawTitleScreen() {
@@ -478,11 +451,7 @@ public class UI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
-        // String text = textField.getText();
-        // textArea.append(text + "\n");
-        // textField.selectAll();
-
-        // textArea.setCaretPosition(textArea.getDocument().getLength());
+        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
     }
 
 }
